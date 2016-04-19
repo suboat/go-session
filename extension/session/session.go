@@ -9,6 +9,7 @@ import (
 
 type Session struct {
 	store   sessions.Store
+	options *sessions.Options
 	session *sessions.Session
 }
 
@@ -18,15 +19,6 @@ func NewSession() *Session {
 
 func newSession(s *Session, ss *sessions.Session) *Session {
 	return &Session{store: s.store, session: ss}
-}
-
-func (s *Session) Store(path string, keyPairs ...[]byte) error {
-	if len(path) != 0 {
-		s.store = sessions.NewFilesystemStore(path, keyPairs...)
-	} else {
-		s.store = sessions.NewCookieStore(keyPairs...)
-	}
-	return nil
 }
 
 func (s *Session) getStore() sessions.Store {
@@ -42,6 +34,23 @@ func (s *Session) hasSession() bool {
 
 func (s *Session) getSession() *sessions.Session {
 	return s.session
+}
+
+func (s *Session) Store(path string, keyPairs ...[]byte) error {
+	if len(path) != 0 {
+		store := sessions.NewFilesystemStore(path, keyPairs...)
+		s.store = store
+		s.options = store.Options
+	} else {
+		store := sessions.NewCookieStore(keyPairs...)
+		s.store = store
+		s.options = store.Options
+	}
+	return nil
+}
+
+func (s *Session) Path(path string) {
+	s.options.Path = path
 }
 
 func (s *Session) New(r *http.Request, name string) (SessionStore, error) {
