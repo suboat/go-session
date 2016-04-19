@@ -7,14 +7,11 @@ type SessionStore interface {
 	Path(string)
 	New(*http.Request, string) (SessionStore, error)
 	Get(*http.Request, string) (SessionStore, error)
+	Session(*http.Request, string) error
 	Save(*http.Request, http.ResponseWriter) error
 	Name() string
 	Flashes(...string) []interface{}
 	AddFlash(interface{}, ...string)
 }
 
-const (
-	SessionKeywordTag    string = "_tag_"
-	SessionKeywordLevel         = "_level_"
-	SessionKeywordStatus        = "_status_"
-)
+const SessionKeyword string = "_session"

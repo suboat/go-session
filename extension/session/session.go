@@ -17,8 +17,8 @@ func NewSession() *Session {
 	return new(Session)
 }
 
-func newSession(s *Session, ss *sessions.Session) *Session {
-	return &Session{store: s.store, session: ss}
+func newSession(s *Session, _s *sessions.Session) *Session {
+	return &Session{store: s.store, session: _s}
 }
 
 func (s *Session) getStore() sessions.Store {
@@ -28,7 +28,14 @@ func (s *Session) getStore() sessions.Store {
 	return s.store
 }
 
-func (s *Session) hasSession() bool {
+func (s *Session) hasSession(r ...*http.Request) bool {
+	if s.session == nil && len(r) != 0 {
+		var err error
+		s.session, err = s.getStore().Get(r[0], SessionKeyword)
+		if err != nil {
+			return false
+		}
+	}
 	return (s.session != nil)
 }
 
@@ -54,23 +61,28 @@ func (s *Session) Path(path string) {
 }
 
 func (s *Session) New(r *http.Request, name string) (SessionStore, error) {
-	ss, err := s.getStore().New(r, name)
+	_s, err := s.getStore().New(r, name)
 	if err != nil {
 		return nil, err
 	}
-	return newSession(s, ss), nil
+	return newSession(s, _s), nil
 }
 
 func (s *Session) Get(r *http.Request, name string) (SessionStore, error) {
-	ss, err := s.getStore().Get(r, name)
+	_s, err := s.getStore().Get(r, name)
 	if err != nil {
 		return nil, err
 	}
-	return newSession(s, ss), nil
+	return newSession(s, _s), nil
+}
+
+func (s *Session) Session(r *http.Request, name string) (err error) {
+	s.session, err = s.getStore().Get(r, name)
+	return nil
 }
 
 func (s *Session) Save(r *http.Request, w http.ResponseWriter) error {
-	if s.hasSession() {
+	if s.hasSession(r) {
 		return s.getStore().Save(r, w, s.getSession())
 	}
 	return ErrNil
