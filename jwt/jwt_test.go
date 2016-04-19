@@ -27,7 +27,7 @@ func TestJWTExampleHmac(t *testing.T) {
 	m["uid"] = 19
 	m["username"] = "the name of user"
 	m["中文"] = "这是个测试123abc"
-	testJWT(t, "hmac_demo", m)
+	testJWT(t, "hmac_test", m)
 }
 
 func TestJWTExampleRSA(t *testing.T) {
@@ -35,5 +35,5 @@ func TestJWTExampleRSA(t *testing.T) {
 	m["uid"] = 21
 	m["username"] = "the name of admin"
 	m["中文"] = "这是个测试123abc"
-	testJWT(t, "rsa_demo", m)
+	testJWT(t, "rsa_test", m)
 }
