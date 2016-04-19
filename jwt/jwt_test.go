@@ -2,8 +2,9 @@ package gosession
 
 import "testing"
 
+// method of running jwt
 func testJWT(t *testing.T, kid string, m interface{}) {
-	jwt, err := NewJWT("./")
+	jwt, err := NewJWT("./") // init jwt
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -22,6 +23,7 @@ func testJWT(t *testing.T, kid string, m interface{}) {
 	}
 }
 
+// the example for hmac key
 func TestJWTExampleHmac(t *testing.T) {
 	var m = make(map[string]interface{})
 	m["uid"] = 19
@@ -30,6 +32,7 @@ func TestJWTExampleHmac(t *testing.T) {
 	testJWT(t, "hmac_test", m)
 }
 
+// the example for rsa key
 func TestJWTExampleRSA(t *testing.T) {
 	var m = make(map[string]interface{})
 	m["uid"] = 21
