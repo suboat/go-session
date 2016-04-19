@@ -8,9 +8,9 @@ import (
 )
 
 type ResponseRecorder struct {
-	Code      int           // the HTTP response code from WriteHeader
-	HeaderMap http.Header   // the HTTP response headers
-	Body      *bytes.Buffer // if non-nil, the bytes.Buffer to append written data to
+	Code      int
+	HeaderMap http.Header
+	Body      *bytes.Buffer
 	Flushed   bool
 }
 
@@ -25,7 +25,6 @@ func (rw *ResponseRecorder) Header() http.Header {
 	return rw.HeaderMap
 }
 
-// Write always succeeds and writes to rw.Body, if not nil.
 func (rw *ResponseRecorder) Write(buf []byte) (int, error) {
 	if rw.Body != nil {
 		rw.Body.Write(buf)
@@ -36,12 +35,10 @@ func (rw *ResponseRecorder) Write(buf []byte) (int, error) {
 	return len(buf), nil
 }
 
-// WriteHeader sets rw.Code.
 func (rw *ResponseRecorder) WriteHeader(code int) {
 	rw.Code = code
 }
 
-// Flush sets rw.Flushed to true.
 func (rw *ResponseRecorder) Flush() {
 	rw.Flushed = true
 }
@@ -55,21 +52,18 @@ func TestSession(t *testing.T) {
 	req, _ := http.NewRequest("GET", "http://localhost:8080/", nil)
 	rsp := NewRecorder()
 
-	// Get a session.
 	if session, err := store.Get(req, "session-key"); err != nil {
 		t.Fatalf("Error getting session: %v", err)
 	} else {
-		// Get a flash.
 		flashes := session.Flashes()
 		if len(flashes) != 0 {
 			t.Errorf("Expected empty flashes; Got %v", flashes)
 		}
-		// Add some flashes.
 		session.AddFlash("foo")
 		session.AddFlash("bar")
-		// Custom key.
+
 		session.AddFlash("baz", "custom_key")
-		// Save.
+
 		if err := session.Save(req, rsp); err != nil {
 			t.Fatalf("Error saving session: %v", err)
 		}
