@@ -36,6 +36,7 @@ func (j *JWT) Parse(token string) (interface{}, error) {
 }
 
 // set key in http.Request header entries
+// default key is "Authorization"
 func (j *JWT) SetHTTPHeaderKey(key string) {
 	jwt.SetHTTPHeaderKey(key)
 }
