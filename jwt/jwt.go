@@ -35,6 +35,11 @@ func (j *JWT) Parse(token string) (interface{}, error) {
 	return jwt.Parse(token)
 }
 
+// set key in http.Request header entries
+func (j *JWT) SetHTTPHeaderKey(key string) {
+	jwt.SetHTTPHeaderKey(key)
+}
+
 // Generate the signing string, and set into http request
 func (j *JWT) SignRequest(r *http.Request, kid string, arg interface{}, minutes int) error {
 	return jwt.SignRequest(r, kid, arg, minutes)
