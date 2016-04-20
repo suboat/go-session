@@ -2,7 +2,12 @@ package gosession
 
 import "github.com/WindomZ/go-jwt/macro"
 
-var (
-	HEADER_KEY          string = jwt.HEADER_KEY()          // Default: "Authorization"
-	HEADER_VALUE_PREFIX        = jwt.HEADER_VALUE_PREFIX() // Default: "Bearer"
-)
+// Default: "Authorization"
+func HEADER_KEY() string {
+	return jwt.HEADER_KEY()
+}
+
+// Default: "Bearer"
+func HEADER_VALUE_PREFIX() string {
+	return jwt.HEADER_VALUE_PREFIX()
+}
