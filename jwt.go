@@ -8,5 +8,6 @@ type JWTToken interface {
 	Parse(string) (interface{}, error)
 	SetHTTPHeaderKey(key string)
 	SignRequest(*http.Request, string, interface{}, int) error
+	SignResponse(http.ResponseWriter, string, interface{}, int) error
 	ParseRequest(*http.Request) (interface{}, error)
 }

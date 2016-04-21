@@ -46,6 +46,11 @@ func (j *JWT) SignRequest(r *http.Request, kid string, arg interface{}, minutes 
 	return jwt.SignRequest(r, kid, arg, minutes)
 }
 
+// Generate the signing string, and set into http response
+func (j *JWT) SignResponse(rw http.ResponseWriter, kid string, arg interface{}, minutes int) error {
+	return jwt.SignResponse(rw, kid, arg, minutes)
+}
+
 // Parse http request, validate, and return a token.
 func (j *JWT) ParseRequest(r *http.Request) (interface{}, error) {
 	return jwt.ParseRequest(r)
